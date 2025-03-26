@@ -1,5 +1,6 @@
 import { getCustomer } from '@/lib/queries/getCustomers';
 import { BackButton } from '@/components/BackButton';
+import CustomerForm from '@/app/(rs)/customers/form/CustomerForm';
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
@@ -25,8 +26,10 @@ export default async function CustomerFormPage(props: {
             }
             // update customer components
             console.log(customer);
+            return <CustomerForm customer={customer} />;
         } else {
             // creat new customer component
+            return <CustomerForm />;
         }
     } catch (e) {
         if (e instanceof Error) {

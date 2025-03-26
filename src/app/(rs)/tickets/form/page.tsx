@@ -2,6 +2,8 @@ import { getTicket } from '@/lib/queries/getTicket';
 import { getCustomer } from '@/lib/queries/getCustomers';
 import { BackButton } from '@/components/BackButton';
 
+import TicketForm from '@/app/(rs)/tickets/form/TicketForm';
+
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
 export default async function TicketFornPage(props: {
@@ -46,6 +48,7 @@ export default async function TicketFornPage(props: {
             }
             // Retun Ticket Form
             console.log('customer only: ', customer);
+            return <TicketForm customer={customer} />;
         }
 
         // Edit ticket form
@@ -67,6 +70,7 @@ export default async function TicketFornPage(props: {
             // Retun Ticket Form
             console.log('ticket: ', ticket);
             console.log('customer: ', customer);
+            return <TicketForm ticket={ticket} customer={customer} />;
         }
     } catch (e) {
         if (e instanceof Error) {
