@@ -9,9 +9,11 @@ import { Button } from '@/components/ui/button';
 import { InputWithLabel } from '@/components/inputs/InputWthLabel';
 import { TextAreaWithLabel } from '@/components/inputs/TextAriaWithLabel';
 import { SelectWithLabel } from '@/components/inputs/SelectWithInput';
+import { CheckBoxWithLabel } from '@/components/inputs/CheckBoxWithLabel';
+
 import { StatesArray } from '@/constans/StatesArray';
 
-//import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
 
 import {
     insertCustomerSchema,
@@ -19,15 +21,24 @@ import {
     type selectCustomerSchemaType,
 } from '@/zod-schemas/customer';
 
+import { generateMetadata } from '@/app/(rs)/tickets/form/page';
+
 type Props = {
     customer?: selectCustomerSchemaType;
 };
 
 export default function CustomerForm({ customer }: Props) {
-    /*     const { getPermission, isLoading } =
+    const { getPermission, /* getPermissions, */ isLoading } =
         useKindeBrowserClient(); // for who manager, admin or user
-    const isManager = !isLoading && getPermission('manager')?.isGranted; */
-
+    const isManager = !isLoading && getPermission('manager')?.isGranted;
+    /* 
+    const permObj = getPermissions();
+    const isAuthorized =
+        !isLoading &&
+        permObj.permissions.some(
+            (perm) => perm === 'manager' || perm === 'admin'
+        ) 
+    */
     const defaultValuesOfCustomer: insertCustomerSchemaType = {
         id: customer?.id ?? 0, // ||- оператор означает принимаем первое или следуещее значение;
         firstName: customer?.firstName ?? '', // ?? - оператор означает принимаем первое истенное значение;
@@ -40,6 +51,7 @@ export default function CustomerForm({ customer }: Props) {
         phone: customer?.phone ?? '',
         email: customer?.email ?? '',
         notes: customer?.notes ?? '',
+        active: customer?.active ?? true,
     };
 
     const form = useForm<insertCustomerSchemaType>({
@@ -57,7 +69,8 @@ export default function CustomerForm({ customer }: Props) {
         <div className="flex flex-col gap-1 sm:px-8">
             <div>
                 <h2 className="text-2xl font-bold">
-                    {customer?.id ? 'Edit' : 'Add'} Customer Form
+                    {customer?.id ? 'Edit' : 'Add'} Customer{' '}
+                    {customer?.id ? `#${customer.id}` : 'Form'}
                 </h2>
             </div>
             <Form {...form}>
@@ -110,6 +123,16 @@ export default function CustomerForm({ customer }: Props) {
                             nameInShema="notes"
                             className="h-40"
                         />
+                        {isLoading ? (
+                            <p>Loading ...</p>
+                        ) : isManager && customer?.id ? (
+                            <CheckBoxWithLabel<insertCustomerSchemaType>
+                                fieldTitle="Active"
+                                nameInShema="active"
+                                message="Yes"
+                            />
+                        ) : null}
+
                         <div className="flex gap-2">
                             <Button
                                 type="submit"

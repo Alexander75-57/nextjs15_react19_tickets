@@ -4,13 +4,11 @@ import CustomerForm from '@/app/(rs)/customers/form/CustomerForm';
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
-// export default async function generateMetadata(props: {
-//     searchParams: SearchParams;
-// }) {
-//     const { customerId } = await props.searchParams;
-//     if (!customerId) return { title: 'New Customer' };
-//     return { title: `Edit Customer #${customerId}` };
-// }
+export async function generateMetadata(props: { searchParams: SearchParams }) {
+    const { customerId } = await props.searchParams;
+    if (!customerId) return { title: 'New Customer' };
+    return { title: `Edit Customer #${customerId}` };
+}
 
 export default async function CustomerFormPage(props: {
     searchParams: SearchParams;
