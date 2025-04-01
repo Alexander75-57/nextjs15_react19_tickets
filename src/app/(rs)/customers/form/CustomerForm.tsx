@@ -21,7 +21,12 @@ import {
     type selectCustomerSchemaType,
 } from '@/zod-schemas/customer';
 
-import { generateMetadata } from '@/app/(rs)/tickets/form/page';
+// for send data to server
+import { useAction } from 'next-safe-action/hooks';
+import { saveCustomerAction } from '@/actions/saveCustomerAction';
+import { toast } from 'sonner';
+import { LoaderCircle } from 'lucide-react';
+import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
 
 type Props = {
     customer?: selectCustomerSchemaType;
@@ -60,13 +65,32 @@ export default function CustomerForm({ customer }: Props) {
         defaultValues: defaultValuesOfCustomer,
     });
 
+    const {
+        execute: executeSave,
+        result: saveResult,
+        isExecuting: isSaving,
+        reset: resetSaveAction,
+    } = useAction(saveCustomerAction, {
+        onSuccess({ data }) {
+            // toast (shadcn) user
+            if (data?.message) {
+                toast(`Success ! ${data.message}`);
+            }
+        },
+        onError({ error }) {
+            toast('Error! Save Failed');
+        },
+    });
+
     // отправляем форму
     async function submitForm(data: insertCustomerSchemaType) {
-        console.log(data);
+        //console.log(data);
+        executeSave({ ...data, firstName: '', phone: '' });
     }
 
     return (
         <div className="flex flex-col gap-1 sm:px-8">
+            <DisplayServerActionResponse result={saveResult} />
             <div>
                 <h2 className="text-2xl font-bold">
                     {customer?.id ? 'Edit' : 'Add'} Customer{' '}
@@ -139,16 +163,25 @@ export default function CustomerForm({ customer }: Props) {
                                 className="w-3/4"
                                 variant="default"
                                 title="Save"
+                                disabled={isSaving}
                             >
-                                Save
+                                {isSaving ? (
+                                    <>
+                                        <LoaderCircle className="anomate-spin" />{' '}
+                                        Saving
+                                    </>
+                                ) : (
+                                    'Save'
+                                )}
                             </Button>
                             <Button
                                 type="button"
                                 variant="destructive"
                                 title="Reset"
-                                onClick={() =>
-                                    form.reset(defaultValuesOfCustomer)
-                                }
+                                onClick={() => {
+                                    form.reset(defaultValuesOfCustomer);
+                                    resetSaveAction();
+                                }}
                             >
                                 Reset
                             </Button>
