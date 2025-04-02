@@ -1,4 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
+
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,21 +12,28 @@ import {
 type Props = {
     icon: LucideIcon;
     label: string;
-    choice: {
+    choices: {
         title: string;
         href: string;
     }[];
 };
 
-export function NavButtonMenu({ icon: Icon, label, choice }: Props) {
+export function NavButtonMenu({ icon: Icon, label, choices }: Props) {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
-                    <Icon classname="h-[1.2rem] w-[1.2rem]" />
+                    <Icon className="h-[1.2rem] w-[1.2rem]" />
                     <span className="sr-only">{label}</span>
                 </Button>
             </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                {choices.map((choice) => (
+                    <DropdownMenuItem key={choice.title} asChild>
+                        <Link href={choice.href}>{choice.title}</Link>
+                    </DropdownMenuItem>
+                ))}
+            </DropdownMenuContent>
         </DropdownMenu>
     );
 }
