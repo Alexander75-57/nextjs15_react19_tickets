@@ -1,6 +1,8 @@
 import TicketSearch from '@/app/(rs)/tickets/TicketSearch';
 import { getOpenTickets } from '@/lib/queries/getOpenTicket';
-import { getCustomerSearchResult } from '@/lib/queries/getCustomerSearchResult';
+import { getTicketSearchResult } from '@/lib/queries/getTicketSearchResult';
+
+import TicketTable from '@/app/(rs)/tickets/TicketTable';
 
 export const metadata = {
     title: 'Tickets Search',
@@ -17,18 +19,28 @@ export default async function Tickets(props: { searchParams: SearchParams }) {
         return (
             <>
                 <TicketSearch />
-                <p>{JSON.stringify(results)}</p>
+                {/* <p>{JSON.stringify(results)}</p> */}
+                {results.length ? (
+                    <TicketTable data={results} />
+                ) : (
+                    <p className="mt-4">No open tickets found</p>
+                )}
             </>
         );
     }
     // query search results
-    const results = await getCustomerSearchResult(searchText);
+    const results = await getTicketSearchResult(searchText);
 
     // return search result
     return (
         <>
             <TicketSearch />
-            <p>{JSON.stringify(results)}</p>
+            {/* <p>{JSON.stringify(results)}</p> */}
+            {results.length ? (
+                <TicketTable data={results} />
+            ) : (
+                <p className="mt-4">No Reults Found</p>
+            )}
         </>
     );
 }
