@@ -13,7 +13,7 @@ import { CheckBoxWithLabel } from '@/components/inputs/CheckBoxWithLabel';
 
 import { StatesArray } from '@/constans/StatesArray';
 
-import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs';
+/* import { useKindeBrowserClient } from '@kinde-oss/kinde-auth-nextjs'; */
 
 import {
     insertCustomerSchema,
@@ -28,14 +28,18 @@ import { toast } from 'sonner';
 import { LoaderCircle } from 'lucide-react';
 import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
 
+import { useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+
 type Props = {
     customer?: selectCustomerSchemaType;
+    isManager?: boolean | undefined;
 };
 
-export default function CustomerForm({ customer }: Props) {
-    const { getPermission, /* getPermissions, */ isLoading } =
+export default function CustomerForm({ customer, isManager = false }: Props) {
+    /* const { getPermission, isLoading } =
         useKindeBrowserClient(); // for who manager, admin or user
-    const isManager = !isLoading && getPermission('manager')?.isGranted;
+    const isManager = !isLoading && getPermission('manager')?.isGranted; */
     /* 
     const permObj = getPermissions();
     const isAuthorized =
@@ -44,26 +48,50 @@ export default function CustomerForm({ customer }: Props) {
             (perm) => perm === 'manager' || perm === 'admin'
         ) 
     */
-    const defaultValuesOfCustomer: insertCustomerSchemaType = {
-        id: customer?.id ?? 0, // ||- оператор означает принимаем первое или следуещее значение;
-        firstName: customer?.firstName ?? '', // ?? - оператор означает принимаем первое истенное значение;
-        lastName: customer?.lastName ?? '',
-        address1: customer?.address1 ?? '',
-        address2: customer?.address2 ?? '',
-        city: customer?.city ?? '',
-        state: customer?.state ?? '',
-        zip: customer?.zip ?? '',
-        phone: customer?.phone ?? '',
-        email: customer?.email ?? '',
-        notes: customer?.notes ?? '',
-        active: customer?.active ?? true,
+
+    const searchParams = useSearchParams(); //для обновления страницы с выбранного клиента на пустую форму
+    const hasCustomerId = searchParams.has('customerId');
+    const emptyValues: insertCustomerSchemaType = {
+        id: 0,
+        firstName: '',
+        lastName: '',
+        address1: '',
+        address2: '',
+        city: '',
+        state: '',
+        zip: '',
+        phone: '',
+        email: '',
+        notes: '',
+        active: true,
     };
+
+    const defaultValuesOfCustomer: insertCustomerSchemaType = hasCustomerId
+        ? {
+              id: customer?.id ?? 0, // ||- оператор означает принимаем первое или следуещее значение;
+              firstName: customer?.firstName ?? '', // ?? - оператор означает принимаем первое истенное значение;
+              lastName: customer?.lastName ?? '',
+              address1: customer?.address1 ?? '',
+              address2: customer?.address2 ?? '',
+              city: customer?.city ?? '',
+              state: customer?.state ?? '',
+              zip: customer?.zip ?? '',
+              phone: customer?.phone ?? '',
+              email: customer?.email ?? '',
+              notes: customer?.notes ?? '',
+              active: customer?.active ?? true,
+          }
+        : emptyValues;
 
     const form = useForm<insertCustomerSchemaType>({
         mode: 'onBlur', // подсветка поля если не коректные данные
         resolver: zodResolver(insertCustomerSchema),
         defaultValues: defaultValuesOfCustomer,
     });
+
+    useEffect(() => {
+        form.reset(hasCustomerId ? defaultValuesOfCustomer : emptyValues);
+    }, [searchParams.get('customerId')]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const {
         execute: executeSave,
@@ -85,7 +113,8 @@ export default function CustomerForm({ customer }: Props) {
     // отправляем форму
     async function submitForm(data: insertCustomerSchemaType) {
         //console.log(data);
-        executeSave({ ...data, firstName: '', phone: '' });
+        /* executeSave({ ...data, firstName: '', phone: '' }); */
+        executeSave(data);
     }
 
     return (
@@ -147,15 +176,17 @@ export default function CustomerForm({ customer }: Props) {
                             nameInShema="notes"
                             className="h-40"
                         />
-                        {isLoading ? (
+                        {
+                            /* isLoading ? (
                             <p>Loading ...</p>
-                        ) : isManager && customer?.id ? (
-                            <CheckBoxWithLabel<insertCustomerSchemaType>
-                                fieldTitle="Active"
-                                nameInShema="active"
-                                message="Yes"
-                            />
-                        ) : null}
+                        ) : */ isManager && customer?.id ? (
+                                <CheckBoxWithLabel<insertCustomerSchemaType>
+                                    fieldTitle="Active"
+                                    nameInShema="active"
+                                    message="Yes"
+                                />
+                            ) : null
+                        }
 
                         <div className="flex gap-2">
                             <Button
