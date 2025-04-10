@@ -23,7 +23,7 @@ import {
 
 // for send data to server
 import { useAction } from 'next-safe-action/hooks';
-import { saveCustomerAction } from '@/actions/saveCustomerAction';
+import { saveCustomerAction } from '@/app/actions/saveCustomerAction';
 import { toast } from 'sonner';
 import { LoaderCircle } from 'lucide-react';
 import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
@@ -102,11 +102,15 @@ export default function CustomerForm({ customer, isManager = false }: Props) {
         onSuccess({ data }) {
             // toast (shadcn) user
             if (data?.message) {
-                toast(`Success ! ${data.message}`);
+                toast('Success! 🎉', {
+                    description: data.message,
+                });
             }
         },
-        onError({ error }) {
-            toast('Error! Save Failed');
+        onError() {
+            toast('Error', {
+                description: `Save Failed`,
+            });
         },
     });
 

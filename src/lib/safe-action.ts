@@ -9,7 +9,7 @@ export const actionClient = createSafeActionClient({
             actionName: z.string(),
         });
     },
-    handleServerError(e, utils) {
+    handleServerError(e /* , utils */) {
         // console.log(e.constructor.name); // show error text in NeonDbError
 
         // const { clientInput, metadata } = utils; // it is for send error to email

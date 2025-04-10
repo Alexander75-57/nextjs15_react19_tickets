@@ -1,9 +1,9 @@
 import { withAuth } from '@kinde-oss/kinde-auth-nextjs/middleware';
-import { NextRequest } from 'next/server';
+/* import { NextRequest } from 'next/server'; */
 
 export default withAuth(
-    async function middleware(request: NextRequest) {
-        //console.log('look at me:', request);
+    async function middleware(/* request: NextRequest */) {
+        //console.log('look at me:', request);сдуфк
     },
     {
         isReturnToCurrentPage: true,

@@ -1,7 +1,8 @@
 'use server';
 
-import { eq, sql } from 'drizzle-orm';
+import { eq /* , sql */ } from 'drizzle-orm';
 import { flattenValidationErrors } from 'next-safe-action';
+import { redirect } from 'next/navigation';
 
 import { db } from '@/db';
 import { customers } from '@/db/schema';
@@ -27,7 +28,7 @@ export const saveCustomerAction = actionClient
         }) => {
             const { isAuthenticated } = getKindeServerSession();
             const isAuth = await isAuthenticated();
-            if (!isAuth) return '/login';
+            if (!isAuth) redirect('/login');
             //throw Error('test error'); // for test error
             //const data = await fetch('https://jsoplaceholder');
             // const query = sql.raw('SELECT * FROM Testname2');

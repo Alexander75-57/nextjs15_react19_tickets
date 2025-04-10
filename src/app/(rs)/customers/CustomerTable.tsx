@@ -19,7 +19,7 @@ import {
     TableRow,
 } from '@/components/ui/table';
 
-import { useRouter } from 'next/navigation';
+/* import { useRouter } from 'next/navigation'; */
 
 // beelow for DropDownMenu
 import {
@@ -39,7 +39,7 @@ type Props = {
 };
 
 export default function CustomerTable({ data }: Props) {
-    const router = useRouter();
+    /* const router = useRouter(); */
 
     const columnHeadersArray: Array<keyof selectCustomerSchemaType> = [
         'firstName',

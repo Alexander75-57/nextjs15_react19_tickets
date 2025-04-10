@@ -20,14 +20,12 @@ const MessageBox = ({
             type === 'error' ? 'text-red-500' : ''
         }`}
     >
-        {type === 'success' ? 'Yes ' : 'Oh '}
-        {content}
+        {type === 'success' ? '🎉' : '🚨'} {content}
     </div>
 );
 
 export function DisplayServerActionResponse({ result }: Props) {
     const { data, serverError, validationErrors } = result;
-
     return (
         <div>
             {data?.message && (
@@ -36,14 +34,16 @@ export function DisplayServerActionResponse({ result }: Props) {
                     content={`Success: ${data.message}`}
                 />
             )}
+
             {serverError && <MessageBox type="error" content={serverError} />}
+
             {validationErrors && (
                 <MessageBox
                     type="error"
-                    content={Object.keys(validationErrors).map((keys) => (
-                        <p key={keys}>{`${keys}: ${
+                    content={Object.keys(validationErrors).map((key) => (
+                        <p key={key}>{`${key}: ${
                             validationErrors[
-                                keys as keyof typeof validationErrors
+                                key as keyof typeof validationErrors
                             ]
                         }`}</p>
                     ))}

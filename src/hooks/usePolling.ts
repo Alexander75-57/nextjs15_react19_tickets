@@ -15,5 +15,6 @@ export function usePolling(ms: number = 60000, searchParam: string | null) {
                 router.refresh();
             }
         }, ms);
+        return () => clearInterval(intervalId);
     }, [searchParam, ms]); // eslint-disable-line react-hooks/exhaustive-deps
 }

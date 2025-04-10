@@ -20,7 +20,7 @@ import { type selectCustomerSchemaType } from '@/zod-schemas/customer';
 
 // for send data to server
 import { useAction } from 'next-safe-action/hooks';
-import { saveTicketAction } from '@/actions/saveTicketAction';
+import { saveTicketAction } from '@/app/actions/saveTicketAction';
 import { toast } from 'sonner';
 import { LoaderCircle } from 'lucide-react';
 import { DisplayServerActionResponse } from '@/components/DisplayServerActionResponse';
@@ -68,12 +68,20 @@ export default function TicketForm({
     } = useAction(saveTicketAction, {
         onSuccess({ data }) {
             // toast (shadcn) user
-            if (data?.message) {
+            /* if (data?.message) {
                 toast(`Success ! ${data.message}`);
+            } */
+            if (data?.message) {
+                toast('Success! 🎉', {
+                    description: data.message,
+                });
             }
         },
-        onError({ error }) {
-            toast('Error! Save Failed');
+        onError() {
+            /* toast('Error! Save Failed'); */
+            toast('Error', {
+                description: `Save Failed`,
+            });
         },
     });
 

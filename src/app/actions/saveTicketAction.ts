@@ -13,7 +13,6 @@ import {
 } from '@/zod-schemas/ticket';
 
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { title } from 'process';
 
 export const saveTicketAction = actionClient
     .metadata({ actionName: 'saveTicketAction' })
@@ -29,7 +28,7 @@ export const saveTicketAction = actionClient
         }) => {
             const { isAuthenticated } = getKindeServerSession();
             const isAuth = await isAuthenticated();
-            if (!isAuth) return '/login';
+            if (!isAuth) redirect('/login');
 
             // New Ticket
             if (ticket.id === '(New)') {
