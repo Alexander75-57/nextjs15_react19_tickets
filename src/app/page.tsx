@@ -19,6 +19,14 @@ export default function Home() {
                         555-555-5555
                     </Link>
                 </div>
+                <div className="flex flex-col gap-6 p-12 rounded-xl w-4/5 sm:max-w-110 mx-auto">
+                    <Link
+                        href="/tickets"
+                        className="text-4xl font-bold bg-white text-black p-4 rounded-xl hover:bg-gray-200 hover:underline"
+                    >
+                        Income
+                    </Link>
+                </div>
             </main>
         </div>
     );
